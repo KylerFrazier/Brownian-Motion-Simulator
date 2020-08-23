@@ -37,3 +37,6 @@ Different types of particles can be edited in `brownians.py`. Each type of parti
 
 ## Output
 If there was a detector in at least one simulation for a batch of trials, an output will be created in the `output` directory. Each output consists of an image of a histogram of the set of trials as well as a text file which contains the raw detection data and a list of parameters for the trial
+
+## Animation
+One pixel in the animation corresponds to one square centimeter. The flow of time in the animation is not reflective of the real world; it is only determined by the user inputed `fps` parameter. 
