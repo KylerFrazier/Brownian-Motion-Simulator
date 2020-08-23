@@ -46,19 +46,27 @@ class BrownianSimulator:
         }
 
         if self.display:
+            
             self.gui = Tk()
             self.gui.title("B R O W N I A N    M O T I O N    S I M U L A T O R")
             self.gui.geometry(f"{self.width}x{self.height}")
-            self.canvas = Canvas(   self.gui, width = self.width, 
-                                    height = self.height)
-            self.canvas.configure(background='black')
+            self.canvas = Canvas(
+                self.gui, width = self.width, height = self.height
+            )
+            self.canvas.configure(background = "black")
             self.canvas.pack()
-            self.canvas.create_line(*self.detector_points[0], 
-                                    *self.detector_points[1], fill = "white")
+            self.canvas.create_line(
+                *self.detector_points[0], *self.detector_points[1], 
+                fill = "white"
+            )
+            for x, _ in self.partitions:
+                self.canvas.create_line(x, 0, x, self.height, fill = "gray")
             self.gui.after(0, self.animate)
             self.gui.mainloop()
+
         else:
-            while self.animate():
+            
+            while self.animate(): 
                 pass
     
     def result(self):
@@ -69,12 +77,6 @@ class BrownianSimulator:
         
         if self.cycle > self.max_cycles:
             
-            print()
-            print("#========== Brownian Motion Simulator Results ==========#")
-            print(f"Detector Orientation: {self.detector_orientation}")
-            print(f"Total Number of Collisions: {self.collisions}")
-            print("#=======================================================#")
-            print()
             if self.display:
                 self.gui.destroy()
             return False
@@ -96,29 +98,45 @@ class BrownianSimulator:
         if self.display and not self.trace:
             self.canvas.delete("animate")
         
+        # Change this to Poisson distribution
         if rand() < self.particle_type.birth_chance:
-            self.particles[self.particle_type(self.width/2, self.height/2)] = 0
+            self.particles.add(self.particle_type(
+                self.x0 + rand()*self.w0, 
+                self.y0 - rand()*self.h0
+            ))
         
         remove = set()
 
         for particle in self.particles:
             
-            self.particles[particle] += 1
-            particle.move()
+            for x, step in self.partitions:
+                if particle.x < x:
+                    particle.move(step)
+                    break
+            
             if self.display:
                 particle.draw(self.canvas)
             
-            if particle.check_line_collision(*self.detector_points):
+            if self.detector_size > 0 \
+            and particle.check_line_collision(*self.detector_points):
                 self.collisions += 1
                 remove.add(particle)
-            if self.particles[particle] > self.particle_type.life_time:
+            
+            if particle.clock > self.particle_type.life_time:
                 remove.add(particle)
         
         for particle in remove:
-            self.particles.pop(particle)
+            self.particles.remove(particle)
         
         if self.display:
-            self.canvas.create_text(20, 20, text = f"Number of particles = {len(self.particles)}",
-                                anchor = NW, tag = "animate", fill = "white")
-            self.canvas.create_text(20, 50, text = f"Number of collisions = {self.collisions}", 
-                                anchor = NW, tag = "animate", fill = "white")
+            
+            self.canvas.create_text(
+                20, 20, text = f"Number of particles = {len(self.particles)}",
+                anchor = NW, tag = "animate", fill = "white"
+            )
+            
+            if self.detector_size != 0:
+                self.canvas.create_text(
+                    20, 50, text = f"Number of collisions = {self.collisions}", 
+                    anchor = NW, tag = "animate", fill = "white"
+                )
