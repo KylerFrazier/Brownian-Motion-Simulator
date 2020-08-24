@@ -4,5 +4,5 @@ def anticlockwise(p1,p2,q1):
 
 def line_collision(p1,p2,q1,q2):
 
-    return  anticlockwise(p1,q1,q2) != anticlockwise(p2,q1,q2) and \
-            anticlockwise(p1,p2,q1) != anticlockwise(p1,p2,q2)
+    return anticlockwise(p1,q1,q2) != anticlockwise(p2,q1,q2) \
+    and anticlockwise(p1,p2,q1) != anticlockwise(p1,p2,q2)
