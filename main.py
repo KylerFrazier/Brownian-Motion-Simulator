@@ -9,32 +9,32 @@ if __name__ == "__main__":
     
     params_list = []
 
-    params_list.append({
-        "name": "Horizontal Detector",
-        "trials": 100,
-        "particle_type": ThermalNeutron,
-        "x0": 0, "y0": 0,
-        "w0": 0, "h0": 0,
-        "detector_size": 20,
-        "detector_orientation": 0,
-        "det_x": -300, "det_y": -200,
-        "partitions": {39277},
-        "max_cycles": 1000,
-        "display": False
-    })
-    params_list.append({
-        "name": "Vertical Detector",
-        "trials": 100,
-        "particle_type": ThermalNeutron,
-        "x0": 0, "y0": 0,
-        "w0": 0, "h0": 0,
-        "detector_size": 20,
-        "detector_orientation": 90,
-        "det_x": -300, "det_y": -200,
-        "partitions": {39277},
-        "max_cycles": 1000,
-        "display": False
-    })
+    # params_list.append({
+    #     "name": "Horizontal Detector",
+    #     "trials": 100,
+    #     "particle_type": ThermalNeutron,
+    #     "x0": 0, "y0": 0,
+    #     "w0": 0, "h0": 0,
+    #     "detector_size": 20,
+    #     "detector_orientation": 0,
+    #     "det_x": -300, "det_y": -200,
+    #     "partitions": {39277},
+    #     "max_cycles": 1000,
+    #     "display": False
+    # })
+    # params_list.append({
+    #     "name": "Vertical Detector",
+    #     "trials": 100,
+    #     "particle_type": ThermalNeutron,
+    #     "x0": 0, "y0": 0,
+    #     "w0": 0, "h0": 0,
+    #     "detector_size": 20,
+    #     "detector_orientation": 90,
+    #     "det_x": -300, "det_y": -200,
+    #     "partitions": {39277},
+    #     "max_cycles": 1000,
+    #     "display": False
+    # })
 
     params_list.append({
         "name": "Starting in Fuel",
@@ -42,9 +42,9 @@ if __name__ == "__main__":
         "particle_type": ThermalNeutron,
         "x0": 60, "y0": -700/2,
         "w0": 80, "h0": 700,
-        "detector_size": 0,
+        "detector_size": 10,
         "partitions": {(-50, 39277), (50, 16.6), 8.627},
-        "max_cycles": 10000,
+        "max_cycles": 1000,
         "display": True,
         "w": 1280, "h": 720,
         "fps": 100,
@@ -56,9 +56,9 @@ if __name__ == "__main__":
         "particle_type": ThermalNeutron,
         "x0": -40, "y0": -700/2,
         "w0": 80, "h0": 700,
-        "detector_size": 0,
+        "detector_size": 10,
         "partitions": {(-50, 39277), (50, 16.6), 8.627},
-        "max_cycles": 10000,
+        "max_cycles": 1000,
         "display": True,
         "w": 1280, "h": 720,
         "fps": 100,
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         print(f"\n#========== {name} ==========#")
         print(result)
         print(f"#{'='*(22+len(name))}#\n")
-        if "detector_size" in params and params["detecor_size"] != 0:
+        if "detector_size" in params and params["detector_size"] != 0:
             results[name] = result
         params["name"] = name
         params["trials"] = trials
@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
     params_with_data = []
     for params in params_list:
-        if "detector_size" in params and params["detecor_size"] != 0:
+        if "detector_size" in params and params["detector_size"] != 0:
             params_with_data.append(params)
         else:
             total_trials -= params["trials"]

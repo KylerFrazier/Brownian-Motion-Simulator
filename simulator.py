@@ -8,7 +8,7 @@ class BrownianSimulator:
     
     def __init__(self, particle_type = ThermalNeutron, max_cycles = 1000, 
         x0 = 0, y0 = 0, w0 = 0, h0 = 0, partitions = {10}, 
-        detector_size = 0, detector_orientation = "", det_x = 400, det_y = 0,
+        detector_size = 0, detector_orientation = 0, det_x = 400, det_y = 0,
         display = True, w = 1280, h = 720, fps = 100, trace = False
     ):
         
@@ -58,6 +58,10 @@ class BrownianSimulator:
             self.canvas.create_line(
                 *self.detector_points[0], *self.detector_points[1], 
                 fill = "white"
+            )
+            self.canvas.create_rectangle(
+                self.x0, self.y0, self.x0 + self.w0, self.y0 - self.h0,
+                fill = "red4"
             )
             for x, _ in self.partitions:
                 self.canvas.create_line(x, 0, x, self.height, fill = "gray")
