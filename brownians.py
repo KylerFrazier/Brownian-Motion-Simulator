@@ -1,14 +1,17 @@
 from random import random as rand
 from math import cos, sin, tan, pi, log as ln
 from collisions import line_collision
+from numpy.random import poisson, exponential
+
+MAX_PARTICLES_ON_SCREEN = 100
 
 N_A = 6.0221409 * 10**23 # (molecules per mole) Avogadro's number
 BARN = 10**-24 # (cm^2) Cross sectional area approximation
 
 class BrownianParticle(object):
 
-    avg_life_time = 400 # Number of frames before the particle dies
-    birth_chance = 100/avg_life_time # Average number of new particles per frame
+    avg_life_time = 1000 # Average number of frames before the particle dies
+    birth_chance = MAX_PARTICLES_ON_SCREEN/avg_life_time # Average number of new particles per frame
     cross_sectional_area = BARN
 
     def __init__(self, x0, y0, r, color, scale = 1):
@@ -21,7 +24,7 @@ class BrownianParticle(object):
         self.color = color      # display color
         
         self.clock = 0
-        self.life_time = self.avg_life_time
+        self.life_time = poisson(self.avg_life_time)
 
         # Mean Free Path scalar factor
         self.k = 1 / (N_A * self.cross_sectional_area * scale)
@@ -48,12 +51,9 @@ class BrownianParticle(object):
         p1, medium = self.get_partition(partitions)
         while True:
             
-            step = self.k * medium.molecular_mass / medium.density
-
-            dist = -step * ln(1 - rand()) # Exponential distribution
-
-            self.x2 = x_prime + dist * cos(theta)
-            self.y2 = y_prime + dist * sin(theta)
+            step = exponential(self.k * medium.molecular_mass / medium.density)
+            self.x2 = x_prime + step * cos(theta)
+            self.y2 = y_prime + step * sin(theta)
 
             p2, _ = self.get_partition(partitions)
 
@@ -89,7 +89,7 @@ class BrownianParticle(object):
 
 class ThermalNeutron(BrownianParticle):
     
-    avg_life_time = 400
+    avg_life_time = 500
     birth_chance = 100/avg_life_time
     cross_sectional_area = BARN
 

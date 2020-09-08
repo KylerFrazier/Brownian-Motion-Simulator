@@ -2,6 +2,7 @@ from tkinter import Tk, Canvas, TclError, NW
 from time import sleep
 from random import random as rand
 from math import inf, pi, sin, cos
+from numpy.random import poisson
 from brownians import ThermalNeutron
 
 class BrownianSimulator:
@@ -105,8 +106,7 @@ class BrownianSimulator:
         if self.display and not self.trace:
             self.canvas.delete("animate")
         
-        # Change this to Poisson distribution
-        if rand() < self.particle_type.birth_chance:
+        for _ in range(poisson(self.particle_type.birth_chance)):
             self.particles.add(self.particle_type(
                 self.x0 + rand()*self.w0, 
                 self.y0 - rand()*self.h0,
