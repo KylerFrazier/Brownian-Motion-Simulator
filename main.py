@@ -1,6 +1,7 @@
 from math import inf
 from simulator import BrownianSimulator
 from brownians import ThermalNeutron
+from mediums import Air, Aluminum, Decane
 from save_data import save_sim_data
 
 if __name__ == "__main__":
@@ -18,7 +19,7 @@ if __name__ == "__main__":
     #     "detector_size": 20,
     #     "detector_orientation": 0,
     #     "det_x": -300, "det_y": -200,
-    #     "partitions": {39277},
+    #     "partitions": {Air},
     #     "max_cycles": 1000,
     #     "display": False
     # })
@@ -31,7 +32,7 @@ if __name__ == "__main__":
     #     "detector_size": 20,
     #     "detector_orientation": 90,
     #     "det_x": -300, "det_y": -200,
-    #     "partitions": {39277},
+    #     "partitions": {Air},
     #     "max_cycles": 1000,
     #     "display": False
     # })
@@ -42,8 +43,8 @@ if __name__ == "__main__":
         "particle_type": ThermalNeutron,
         "x0": 60, "y0": -700/2,
         "w0": 80, "h0": 700,
-        "detector_size": 10,
-        "partitions": {(-50, 39277), (50, 16.6), 8.627},
+        "detector_size": 0,
+        "partitions": {(-50, Air), (50, Aluminum), Decane},
         "max_cycles": 1000,
         "display": True,
         "w": 1280, "h": 720,
@@ -56,8 +57,8 @@ if __name__ == "__main__":
         "particle_type": ThermalNeutron,
         "x0": -40, "y0": -700/2,
         "w0": 80, "h0": 700,
-        "detector_size": 10,
-        "partitions": {(-50, 39277), (50, 16.6), 8.627},
+        "detector_size": 0,
+        "partitions": {(-50, Air), (50, Aluminum), Decane},
         "max_cycles": 1000,
         "display": True,
         "w": 1280, "h": 720,

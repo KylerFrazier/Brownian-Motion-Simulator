@@ -2,7 +2,14 @@ from random import random as rand
 from math import cos, sin, pi, log as ln
 from collisions import line_collision
 
-class BrownianParticle:
+N_A = 6.0221409 * 10**23 # (molecules per mole) Avogadro's number
+BARN = 10**-24 # (cm^2) Cross sectional area approximation
+
+class BrownianParticle(object):
+
+    avg_life_time = 400 # Number of frames before the particle dies
+    birth_chance = 100/avg_life_time # Average number of new particles per frame
+    cross_sectional_area = BARN
 
     def __init__(self, x0, y0, r, color):
         
@@ -12,12 +19,19 @@ class BrownianParticle:
         self.y2 = y0            # next y
         self.r = r              # radius
         self.color = color      # display color
+        
         self.clock = 0
+        self.life_time = self.avg_life_time
+
+        # Mean Free Path scalar factor
+        self.k = 1 / (N_A * self.cross_sectional_area)
     
-    def move(self, step):
+    def move(self, medium):
         
         self.x = self.x2
         self.y = self.y2
+
+        step = self.k * medium.molecular_mass / medium.density
 
         dist = -step * ln(1 - rand()) # Exponential distribution
         theta = 2 * pi * rand()
@@ -45,10 +59,11 @@ class BrownianParticle:
 
 class ThermalNeutron(BrownianParticle):
     
-    life_time = 400
-    birth_chance = 100/life_time
+    avg_life_time = 400
+    birth_chance = 100/avg_life_time
+    cross_sectional_area = BARN
 
     def __init__(self, x0, y0):
         
-        BrownianParticle.__init__(  self, x0, y0, 2, "white")
+        super().__init__(x0, y0, 2, "white")
         

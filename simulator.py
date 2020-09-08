@@ -113,9 +113,9 @@ class BrownianSimulator:
 
         for particle in self.particles:
             
-            for x, step in self.partitions:
+            for x, medium in self.partitions:
                 if particle.x < x:
-                    particle.move(step)
+                    particle.move(medium)
                     break
             
             if self.display:
@@ -126,7 +126,7 @@ class BrownianSimulator:
                 self.collisions += 1
                 remove.add(particle)
             
-            if particle.clock > self.particle_type.life_time:
+            if particle.clock > particle.life_time:
                 remove.add(particle)
         
         for particle in remove:
