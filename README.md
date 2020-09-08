@@ -20,6 +20,7 @@ There are a handful of parameters that will affect how the simulation runs. The 
 - `name`: The name of a batch of trials.
 - `trials`: The number of trials to run with a set of parameters.
 - `particle_type`: The particle type to be run with a set of trials.
+- `scale`: The scale of the size of the environment by pixel side length.
 - `x0`, `y0`: The spawning position of the particles in cartesian coordinates. The point `(0,0)` represents the center of the screen.
 - `w0`, `h0`: The width and height of a box which originates at `(x0, y0)`. Particles will be able to spawn in the area of this box.
 - `detector_size`: The length of the detector. Set this value to `0` to remove the detector.

@@ -1,5 +1,5 @@
 from random import random as rand
-from math import cos, sin, pi, log as ln
+from math import cos, sin, tan, pi, log as ln
 from collisions import line_collision
 
 N_A = 6.0221409 * 10**23 # (molecules per mole) Avogadro's number
@@ -11,7 +11,7 @@ class BrownianParticle(object):
     birth_chance = 100/avg_life_time # Average number of new particles per frame
     cross_sectional_area = BARN
 
-    def __init__(self, x0, y0, r, color):
+    def __init__(self, x0, y0, r, color, scale = 1):
         
         self.x = x0             # starting x
         self.y = y0             # starting y
@@ -24,20 +24,50 @@ class BrownianParticle(object):
         self.life_time = self.avg_life_time
 
         # Mean Free Path scalar factor
-        self.k = 1 / (N_A * self.cross_sectional_area)
+        self.k = 1 / (N_A * self.cross_sectional_area * scale)
     
-    def move(self, medium):
-        
+    def get_partition(self, partitions) -> int:
+
+        i = 0
+        for x, medium in partitions:
+            if self.x2 < x:
+                return i, medium
+            i += 1
+        assert False, "Particle's destination was not in space."
+
+    def move(self, partitions):
+
         self.x = self.x2
         self.y = self.y2
 
-        step = self.k * medium.molecular_mass / medium.density
+        x_prime = self.x
+        y_prime = self.y
 
-        dist = -step * ln(1 - rand()) # Exponential distribution
         theta = 2 * pi * rand()
 
-        self.x2 = self.x + dist * cos(theta)
-        self.y2 = self.y + dist * sin(theta)
+        p1, medium = self.get_partition(partitions)
+        while True:
+            
+            step = self.k * medium.molecular_mass / medium.density
+
+            dist = -step * ln(1 - rand()) # Exponential distribution
+
+            self.x2 = x_prime + dist * cos(theta)
+            self.y2 = y_prime + dist * sin(theta)
+
+            p2, _ = self.get_partition(partitions)
+
+            if p1 == p2: 
+                break
+            else:
+                if p2 > p1:
+                    x_prime = partitions[p1][0]
+                    p1 += 1
+                else:
+                    p1 -= 1
+                    x_prime = partitions[p1][0]
+                y_prime = (x_prime - self.x) * tan(theta) + self.y
+                medium = partitions[p1][1]
 
         self.clock += 1
     
@@ -63,7 +93,7 @@ class ThermalNeutron(BrownianParticle):
     birth_chance = 100/avg_life_time
     cross_sectional_area = BARN
 
-    def __init__(self, x0, y0):
+    def __init__(self, x0, y0, scale = 1):
         
-        super().__init__(x0, y0, 2, "white")
+        super().__init__(x0, y0, 2, "white", scale)
         

@@ -7,12 +7,13 @@ from brownians import ThermalNeutron
 class BrownianSimulator:
     
     def __init__(self, particle_type = ThermalNeutron, max_cycles = 1000, 
-        x0 = 0, y0 = 0, w0 = 0, h0 = 0, partitions = {10}, 
+        scale = 1, x0 = 0, y0 = 0, w0 = 0, h0 = 0, partitions = {10}, 
         detector_size = 0, detector_orientation = 0, det_x = 400, det_y = 0,
         display = True, w = 1280, h = 720, fps = 100, trace = False
     ):
         
         self.particle_type = particle_type
+        self.scale = scale
         self.detector_size = detector_size
         self.partitions = sorted([
             (tup[0] + w/2, tup[1]) if hasattr(tup, "__len__") and len(tup) > 1 \
@@ -41,9 +42,11 @@ class BrownianSimulator:
         self.collisions = 0
         self.cycle = 0
 
-        self.particles = {
-            particle_type(self.x0 + rand()*self.w0, self.y0 + rand()*self.h0)
-        }
+        self.particles = {particle_type(
+            self.x0 + rand()*self.w0, 
+            self.y0 + rand()*self.h0, 
+            self.scale
+        )}
 
         if self.display:
             
@@ -106,17 +109,15 @@ class BrownianSimulator:
         if rand() < self.particle_type.birth_chance:
             self.particles.add(self.particle_type(
                 self.x0 + rand()*self.w0, 
-                self.y0 - rand()*self.h0
+                self.y0 - rand()*self.h0,
+                self.scale
             ))
         
         remove = set()
 
         for particle in self.particles:
             
-            for x, medium in self.partitions:
-                if particle.x < x:
-                    particle.move(medium)
-                    break
+            particle.move(self.partitions)
             
             if self.display:
                 particle.draw(self.canvas)
